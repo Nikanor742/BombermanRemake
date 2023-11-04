@@ -1,18 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AudioPlayer : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public AudioClip expolosion;
+    public static AudioPlayer Instance { get; private set; }
+
+    private AudioSource audioSource;
+
+    private void Awake()
     {
-        
+        Instance = this;
+        audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PlaySound(ESoundType sound)
     {
-        
+        if (sound == ESoundType.explosion)
+        {
+            audioSource.clip = expolosion;
+            audioSource.Play();
+        }
     }
 }

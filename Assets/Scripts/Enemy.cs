@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public EMonsterType monsterType;
     public GameObject DeathEffect;
     public List<Vector2> CellsToMoveR;
     public List<Vector2> CellsToMoveL;
@@ -29,6 +30,7 @@ public class Enemy : MonoBehaviour
     {
         if (source == 1)
         {
+            SaveExtension.game.MonsterCountInLevel--;
             Instantiate(DeathEffect, transform.position, transform.rotation);
             Destroy(gameObject);
         }

@@ -21,11 +21,13 @@ public class Damage : MonoBehaviour
         {
             other.GetComponent<Enemy>().Damage(source);
         }
-        if (other.tag == "Brick")
+        if (other.TryGetComponent(out Brick brick) && source == 1)
         {
+            if (brick.hiddenPowerUp != null)
+                brick.hiddenPowerUp.gameObject.SetActive(true);
+
             Destroy(other.gameObject);
             Instantiate(BrickDeathEffect, transform.position, transform.rotation);
-            Instantiate(RandomPowerUp, transform.position, transform.rotation);
         }
     }
 

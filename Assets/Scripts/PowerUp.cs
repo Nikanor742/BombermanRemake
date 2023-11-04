@@ -11,20 +11,30 @@ public class PowerUp : MonoBehaviour
     //4 -noclip fire
     //5 -noclip bomb
     //6 -detonator
-    public int Type;
+    public EBonusType Type;
 
-    public float invincibilityTime;
+    private BoxCollider2D boxCollider;
 
-    void Update()
+    private void Awake()
     {
-        if (invincibilityTime > 0)
-        {
-            invincibilityTime -= Time.deltaTime;
-        }
+        boxCollider = GetComponent<BoxCollider2D>();
+        boxCollider.enabled = false;
     }
+    private IEnumerator ActivateBonus()
+    {
+        boxCollider.enabled = false;
+        yield return new WaitForSeconds(1f);
+        boxCollider.enabled = true;
+    }
+
+    private void OnEnable()
+    {
+        StartCoroutine(ActivateBonus());
+    }
+    
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Fire" && invincibilityTime<=0)
+        if (other.tag == "Fire")
         {
             Destroy(gameObject);
         }

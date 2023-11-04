@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 
 public class Bomberman : MonoBehaviour
@@ -15,8 +13,6 @@ public class Bomberman : MonoBehaviour
     private bool buttonBomb;
     private bool buttonDetonate;
 
-    private int BombsAllowed;
-    private int FireLenght;
     private int SpeedBoots;
     private int Life;
     private bool NoclipWalls;
@@ -34,6 +30,7 @@ public class Bomberman : MonoBehaviour
 
 
     public int Direction;// 4<||6>||8^||2v
+    public int lastDirectionX;
     public Transform Sensor;
     public float sensorSize = 0.7f;
     public float sensorRange = 0.4f;
@@ -54,17 +51,18 @@ public class Bomberman : MonoBehaviour
     public GameObject guiNoClipWals;
     public GameObject guiDeath;
 
+    private SpriteRenderer sprite;
+
 
     void Start()
     {
-        BombsAllowed = 2;
-        FireLenght = 1;
+        sprite = GetComponent<SpriteRenderer>();
         SpeedBoots = 0;
 
-        Life = PlayerPrefs.GetInt("Life");
+        Life = SaveExtension.player.lifeCount;
         HasDetonator = false;
-        TextBomb.text = BombsAllowed.ToString();
-        TextFire.text = FireLenght.ToString();
+        TextBomb.text = SaveExtension.player.bombLevel.ToString();
+        TextFire.text = SaveExtension.player.fireLevel.ToString();
         TextLife.text = Life.ToString();
     }
 
@@ -94,7 +92,7 @@ public class Bomberman : MonoBehaviour
             StartCoroutine(ReloadScene());
             
         }
-        else if(source==1 && !NoclipFire)
+        else if(source == 1 && !NoclipFire)
         {
             GetComponent<SpriteRenderer>().enabled = false;
             GetComponent<Bomberman>().enabled = false;
@@ -109,14 +107,14 @@ public class Bomberman : MonoBehaviour
     {
         Life--;
         TextLife.text = Life.ToString();
-        PlayerPrefs.SetInt("Life", Life);
-        PlayerPrefs.Save();
+        SaveExtension.player.lifeCount = Life;
+        SaveExtension.Save();
         Destroy(gameObject);
         if (Life <= 0)
         {
             Instantiate(LoseAudio, transform.position, transform.rotation);
-            PlayerPrefs.SetInt("Life", 3);
-            PlayerPrefs.Save();
+            SaveExtension.player.lifeCount = 3;
+            SaveExtension.Save();
             guiDeath.SetActive(true);
         }
         else
@@ -129,51 +127,44 @@ public class Bomberman : MonoBehaviour
         if (other.tag == "PowerUp")
         {
             switch (other.GetComponent<PowerUp>().Type)
-            //0 -Bomb
-            //1 -Fire
-            //2 -speed
-            //3 -noclip wall
-            //4 -noclip fire
-            //5 -noclip bomb
-            //6 -detonator
             {
-                case 0:
+                case (EBonusType)0:
                     {
                         GetBombPowerUp();
-                        TextBomb.text = BombsAllowed.ToString();
+                        TextBomb.text = SaveExtension.player.bombLevel.ToString();
                         break;
                     }
-                case 1:
+                case (EBonusType)1:
                     {
                         GetFirePowerUp();
-                        TextFire.text = FireLenght.ToString();
+                        TextFire.text = SaveExtension.player.fireLevel.ToString();
                         break;
                     }
-                case 2:
+                case (EBonusType)2:
                     {
                         GetSpeedPowerUp();
                         guiBoots.SetActive(true);
                         break;
                     }
-                case 3:
+                case (EBonusType)3:
                     {
                         GetNoclipWallsPowerUp();
                         guiNoClipWals.SetActive(true);
                         break;
                     }
-                case 4:
+                case (EBonusType)4:
                     {
                         GetNoclipFirePowerUp();
                         guiNoClipFire.SetActive(true);
                         break;
                     }
-                case 5:
+                case (EBonusType)5:
                     {
                         GetNoclipBombsPowerUp();
                         guiNoClipBomb.SetActive(true);
                         break;
                     }
-                case 6:
+                case (EBonusType)6:
                     {
                         GetDetonatorPowerUp();
                         guiDetonator.SetActive(true);
@@ -187,19 +178,20 @@ public class Bomberman : MonoBehaviour
 
     void GetBombPowerUp()
     {
-        BombsAllowed++;
+        SaveExtension.player.bombLevel++;
+        SaveExtension.Save();
     }
 
     void GetFirePowerUp()
     {
-        FireLenght++;
+        SaveExtension.player.fireLevel++;
+        SaveExtension.Save();
     }
 
     void GetSpeedPowerUp()
     {
         SpeedBoots++;
         MoveSpeed += SpeedBoots;
-
     }
 
     void GetNoclipWallsPowerUp()
@@ -226,38 +218,23 @@ public class Bomberman : MonoBehaviour
     {
         return HasDetonator;
     }
-
-    public void AddBomb()
-    {
-        BombsAllowed++;
-    }
-    public void AddFire()
-    {
-        FireLenght++;
-    }
-
-    public int GetFireLength()
-    {
-        return FireLenght; 
-    }
     void Move()
     {
         if (Direction == 4)
         {
-            GetComponent<SpriteRenderer>().flipX = true;
+            sprite.flipX = true;
         }
         if (Direction == 6)
         {
-            GetComponent<SpriteRenderer>().flipX = false;
+            sprite.flipX = false;
         }
         if (!canMove)
         {
             return;
         }
-       
+
         switch (Direction)
         {
-
             case 2:
                 transform.position = new Vector2(Mathf.Round(transform.position.x), transform.position.y - MoveSpeed * Time.deltaTime);
                 break;
@@ -274,11 +251,14 @@ public class Bomberman : MonoBehaviour
     }
     void HandleBombs()
     {
-        if (buttonBomb && GameObject.FindGameObjectsWithTag("Bomb").Length < BombsAllowed && !InsideBomb &&!InsideFire&&!InsideBrick)
+        if (buttonBomb && GameObject.FindGameObjectsWithTag("Bomb").Length < SaveExtension.player.bombLevel
+            && !InsideBomb
+            && !InsideFire
+            && !InsideBrick)
         {
             Instantiate(Bomb, new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), transform.rotation);
         }
-        if (buttonDetonate &&HasDetonator)
+        if (buttonDetonate && HasDetonator)
         {
             var bombs = FindObjectsOfType<Bomb>();
             foreach(var bomb in bombs)
@@ -293,20 +273,24 @@ public class Bomberman : MonoBehaviour
         InsideBomb = Physics2D.OverlapBox(Sensor.position, new Vector2(sensorSize, sensorSize), 0, BombLayer);
         InsideFire= Physics2D.OverlapBox(Sensor.position, new Vector2(sensorSize, sensorSize), 0, FireLayer);
         InsideBrick = Physics2D.OverlapBox(Sensor.position, new Vector2(sensorSize, sensorSize), 0, BrickLayer);
+        Vector2 sensorPos = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
         switch (Direction)
         {
-
             case 2:
-                Sensor.transform.localPosition = new Vector2(0, -sensorRange);
+                Sensor.transform.position = new Vector2(sensorPos.x, -sensorRange);
+                Sensor.transform.localPosition = new Vector2(Sensor.transform.localPosition.x, -sensorRange);
                 break;
             case 4:
+                Sensor.transform.position = new Vector2(-sensorRange, sensorPos.y);
                 Sensor.transform.localPosition = new Vector2(-sensorRange, 0);
                 break;
             case 6:
+                Sensor.transform.position = new Vector2(sensorRange, sensorPos.y);
                 Sensor.transform.localPosition = new Vector2(sensorRange, 0);
                 break;
             case 8:
-                Sensor.transform.localPosition = new Vector2(0, sensorRange);
+                Sensor.transform.position = new Vector2(sensorPos.x, sensorRange);
+                Sensor.transform.localPosition = new Vector2(Sensor.transform.localPosition.x, sensorRange);
                 break;
         }
         canMove = !Physics2D.OverlapBox(Sensor.position, new Vector2(sensorSize, sensorSize), 0, StoneLayer);
@@ -330,8 +314,16 @@ public class Bomberman : MonoBehaviour
     void GetDirection()
     {
         Direction = 5;
-        if (buttonLeft) Direction = 4;
-        if (buttonRight) Direction = 6;
+        if (buttonLeft)
+        {
+            lastDirectionX = -1;
+            Direction = 4;
+        }
+        if (buttonRight)
+        {
+            lastDirectionX = 1;
+            Direction = 6;
+        }
         if (buttonUp) Direction = 8;
         if (buttonDown) Direction = 2;
     }

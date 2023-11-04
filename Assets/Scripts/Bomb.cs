@@ -20,7 +20,6 @@ public class Bomb : MonoBehaviour
     private float Counter;
     private int FireLength;
     private Bomberman Bomber;
-    private AudioPlayer A_Player;
 
     public LayerMask StoneLayer;
     public LayerMask BlowableLayer;
@@ -37,7 +36,6 @@ public class Bomb : MonoBehaviour
     {
         Counter = Delay;
         Bomber = FindObjectOfType<Bomberman>();
-        A_Player = FindObjectOfType<AudioPlayer>();
         AutoDetonate = Bomber.CheckDetonator();
         CellsToBlowR = new List<Vector2>();
         CellsToBlowL = new List<Vector2>();
@@ -86,11 +84,9 @@ public class Bomb : MonoBehaviour
     }
     public void Blow()
     {
-        BlowAudioSound = A_Player.GetComponent<AudioSource>();
-        BlowAudioSound.Play();
+        AudioPlayer.Instance.PlaySound(ESoundType.explosion);
         CalculateFireDirections();
         Instantiate(FireMid,transform.position,transform.rotation);
-        //L
         if (CellsToBlowL.Count > 0)
         {
             for (int i = 0; i < CellsToBlowL.Count; i++)
@@ -158,7 +154,7 @@ public class Bomb : MonoBehaviour
     }
     void CalculateFireDirections()
     {
-        FireLength = Bomber.GetFireLength();
+        FireLength = SaveExtension.player.fireLevel;
         //L
         for (int i = 1; i <= FireLength; i++)
         {
