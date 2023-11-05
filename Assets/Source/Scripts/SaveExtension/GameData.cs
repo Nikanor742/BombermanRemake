@@ -16,5 +16,9 @@ public class GameData
 
     public int startFireLevel;
     public int startBombLevel;
+
+    public RUButton ruButton;
+    public ENButton enButton;
+    public TRButton trButton;
     
 }

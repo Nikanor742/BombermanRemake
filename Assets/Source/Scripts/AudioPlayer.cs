@@ -9,6 +9,7 @@ public class AudioPlayer : MonoBehaviour
     public AudioClip powerUp;
     public AudioClip monster;
     public AudioClip fail;
+    public AudioClip dead;
 
     public static AudioPlayer Instance { get; private set; }
 
@@ -35,6 +36,8 @@ public class AudioPlayer : MonoBehaviour
 
     public void PlaySound(ESoundType sound)
     {
+        if (!SaveExtension.player.sound)
+            return;
         if (sound == ESoundType.explosion)
         {
             var a = gameObject.AddComponent<AudioSource>();
@@ -83,6 +86,13 @@ public class AudioPlayer : MonoBehaviour
             a.clip = fail;
             a.Play();
             Destroy(a, 0.5f);
+        }
+        else if (sound == ESoundType.dead)
+        {
+            var a = gameObject.AddComponent<AudioSource>();
+            a.clip = dead;
+            a.Play();
+            Destroy(a, 7f);
         }
     }
 }

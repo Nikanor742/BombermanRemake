@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using YG;
 
 public class ScoreSystem : MonoBehaviour
 {
@@ -22,7 +23,20 @@ public class ScoreSystem : MonoBehaviour
 
     private void SetScoreText()
     {
-        scoreText.text = "счёт: " + SaveExtension.player.score.ToString();
+        string text = "";
+        if(SaveExtension.player.language == ELanguages.RU)
+        {
+            text = "счёт: ";
+        }
+        else if(SaveExtension.player.language == ELanguages.EN)
+        {
+            text = "score: ";
+        }
+        else if(SaveExtension.player.language == ELanguages.TR)
+        {
+            text = "kontrol etmek: "; 
+        }
+        scoreText.text = text + SaveExtension.player.score.ToString();
     }
 
     public void AddScore(EScoreType scoreType)

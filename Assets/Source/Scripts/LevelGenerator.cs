@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using YG;
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -22,7 +23,20 @@ public class LevelGenerator : MonoBehaviour
     void Start()
     {
         int level = SaveExtension.player.level;
-        levelText.text = "уровень " + (level + 1).ToString();
+        string text = "";
+        if (SaveExtension.player.language == ELanguages.RU)
+        {
+            text = "уровень ";
+        }
+        else if (SaveExtension.player.language == ELanguages.EN)
+        {
+            text = "level ";
+        }
+        else if (SaveExtension.player.language == ELanguages.TR)
+        {
+            text = "seviye ";
+        }
+        levelText.text = text + (level + 1).ToString();
 
         levelBonuses = new List<EBonusType>();
         foreach (var b in levelsConfig.levels[level].bonuses)

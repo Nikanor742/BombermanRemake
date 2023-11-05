@@ -7,5 +7,6 @@ public enum ESoundType
     portal,
     powerUp,
     monster,
-    fail
+    fail,
+    dead
 }

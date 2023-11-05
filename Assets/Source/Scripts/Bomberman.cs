@@ -124,7 +124,7 @@ public class Bomberman : MonoBehaviour
         if (Life <= 0)
         {
             AudioPlayer.Instance.StopAllSounds();
-            Instantiate(LoseAudio, transform.position, transform.rotation);
+            AudioPlayer.Instance.PlaySound(ESoundType.dead);
             SaveExtension.player.lifeCount = 3;
             SaveExtension.Save();
             guiDeath.SetActive(true);
