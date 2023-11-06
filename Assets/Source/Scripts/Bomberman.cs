@@ -4,17 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+using YG;
 
 public class Bomberman : MonoBehaviour
 {
-    private bool buttonLeft;
-    private bool buttonRight;
-    private bool buttonUp;
-    private bool buttonDown;
-    private bool buttonBomb;
-    private bool buttonDetonate;
-
     private int SpeedBoots;
     private int Life;
     private bool NoclipWalls;
@@ -26,6 +19,7 @@ public class Bomberman : MonoBehaviour
     private bool InsideBomb;
     private bool InsideFire;
     private bool InsideBrick;
+    [SerializeField] private MobileInput mobileInputPrefab;
     [SerializeField] private TextMeshProUGUI TextBomb;
     [SerializeField] private TextMeshProUGUI TextFire;
     [SerializeField] private TextMeshProUGUI TextLife;
@@ -58,9 +52,20 @@ public class Bomberman : MonoBehaviour
 
     private bool playerActive = true;
 
+    private IInput _input;
+
 
     void Start()
     {
+        /*if (YandexGame.EnvironmentData.isDesktop)
+        {
+            _input = gameObject.AddComponent<DesktopInput>();
+        }
+        else if (YandexGame.EnvironmentData.isMobile)
+        {
+            _input = Instantiate(mobileInputPrefab);
+        }*/
+        _input = Instantiate(mobileInputPrefab);
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
         SpeedBoots = 0;
@@ -78,7 +83,6 @@ public class Bomberman : MonoBehaviour
     {
         if (playerActive)
         {
-            GetInput();
             GetDirection();
             HandleSensor();
             HandleBombs();
@@ -266,14 +270,14 @@ public class Bomberman : MonoBehaviour
     }
     void HandleBombs()
     {
-        if (buttonBomb && GameObject.FindGameObjectsWithTag("Bomb").Length < SaveExtension.player.bombLevel
+        if (_input.ButtonBomb && GameObject.FindGameObjectsWithTag("Bomb").Length < SaveExtension.player.bombLevel
             && !InsideBomb
             && !InsideFire
             && !InsideBrick)
         {
             Instantiate(Bomb, new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), transform.rotation);
         }
-        if (buttonDetonate && HasDetonator)
+        if (_input.ButtonDetonate && HasDetonator)
         {
             var bombs = FindObjectsOfType<Bomb>();
             foreach(var bomb in bombs)
@@ -329,27 +333,18 @@ public class Bomberman : MonoBehaviour
     void GetDirection()
     {
         Direction = 5;
-        if (buttonLeft)
+        if (_input.ButtonLeft)
         {
             lastDirectionX = -1;
             Direction = 4;
         }
-        if (buttonRight)
+        if (_input.ButtonRight)
         {
             lastDirectionX = 1;
             Direction = 6;
         }
-        if (buttonUp) Direction = 8;
-        if (buttonDown) Direction = 2;
-    }
-    void GetInput()
-    {
-        buttonLeft = Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S);
-        buttonRight = Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S);
-        buttonUp = Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S);
-        buttonDown = Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.W);
-        buttonBomb = Input.GetMouseButton(0);
-        buttonDetonate = Input.GetMouseButton(1);
+        if (_input.ButtonUp) Direction = 8;
+        if (_input.ButtonDown) Direction = 2;
     }
     void Animate()
     {

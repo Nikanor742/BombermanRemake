@@ -20,16 +20,23 @@ public class ControllHelp : MonoBehaviour
             b.SetActive(true);
         }
         await Task.Delay(15000);
-        foreach (var b in basicElements)
+        if (this != null)
         {
-            b.SetActive(false);
+            foreach (var b in basicElements)
+            {
+                b.SetActive(false);
+            }
         }
+        
     }
 
     public async void ShowDetonateButton()
     {
         detonateButton.SetActive(true);
         await Task.Delay(15000);
-        detonateButton.SetActive(false);
+        if (this != null)
+        {
+            detonateButton.SetActive(false);
+        }
     }
 }

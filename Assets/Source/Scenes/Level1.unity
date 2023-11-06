@@ -18955,6 +18955,12 @@ PrefabInstance:
       propertyPath: guiNoClipWals
       value: 
       objectReference: {fileID: 1110261505}
+    - target: {fileID: 1910623014075350247, guid: d4be3ee613870f24fa66b2c055c31d89,
+        type: 3}
+      propertyPath: mobileInputPrefab
+      value: 
+      objectReference: {fileID: 1598452422397788280, guid: 4f8e5bc386e5c9f4f80d6c7c91a10203,
+        type: 3}
     m_RemovedComponents:
     - {fileID: 7778599715751956306, guid: d4be3ee613870f24fa66b2c055c31d89, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d4be3ee613870f24fa66b2c055c31d89, type: 3}
