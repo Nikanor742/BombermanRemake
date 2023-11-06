@@ -23,6 +23,10 @@ public class LevelGenerator : MonoBehaviour
     void Start()
     {
         int level = SaveExtension.player.level;
+        if (level == 0)
+        {
+            ControllHelp.Instance.ShowBasicHelp();
+        }
         string text = "";
         if (SaveExtension.player.language == ELanguages.RU)
         {

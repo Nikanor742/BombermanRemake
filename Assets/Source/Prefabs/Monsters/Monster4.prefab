@@ -59,7 +59,7 @@ MonoBehaviour:
   StopLayer:
     serializedVersion: 2
     m_Bits: 768
-  speed: 3
+  speed: 2
   isMoving: 0
 --- !u!50 &2855313231059590177
 Rigidbody2D:

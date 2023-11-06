@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -25,9 +26,9 @@ public class Bomberman : MonoBehaviour
     private bool InsideBomb;
     private bool InsideFire;
     private bool InsideBrick;
-    [SerializeField] private Text TextBomb;
-    [SerializeField] private Text TextFire;
-    [SerializeField] private Text TextLife;
+    [SerializeField] private TextMeshProUGUI TextBomb;
+    [SerializeField] private TextMeshProUGUI TextFire;
+    [SerializeField] private TextMeshProUGUI TextLife;
 
 
     public int Direction;// 4<||6>||8^||2v
@@ -224,6 +225,7 @@ public class Bomberman : MonoBehaviour
 
     void GetDetonatorPowerUp()
     {
+        ControllHelp.Instance.ShowDetonateButton();
         HasDetonator = true;
     }
 
@@ -284,7 +286,7 @@ public class Bomberman : MonoBehaviour
     {
         Sensor.transform.localPosition = new Vector2(0, 0);
         InsideBomb = Physics2D.OverlapBox(Sensor.position, new Vector2(sensorSize, sensorSize), 0, BombLayer);
-        InsideFire= Physics2D.OverlapBox(Sensor.position, new Vector2(sensorSize, sensorSize), 0, FireLayer);
+        InsideFire = Physics2D.OverlapBox(Sensor.position, new Vector2(sensorSize, sensorSize), 0, FireLayer);
         InsideBrick = Physics2D.OverlapBox(Sensor.position, new Vector2(sensorSize, sensorSize), 0, BrickLayer);
         Vector2 sensorPos = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
         switch (Direction)
@@ -295,11 +297,11 @@ public class Bomberman : MonoBehaviour
                 break;
             case 4:
                 Sensor.transform.position = new Vector2(-sensorRange, sensorPos.y);
-                Sensor.transform.localPosition = new Vector2(-sensorRange, 0);
+                Sensor.transform.localPosition = new Vector2(-sensorRange, Sensor.transform.localPosition.y);
                 break;
             case 6:
                 Sensor.transform.position = new Vector2(sensorRange, sensorPos.y);
-                Sensor.transform.localPosition = new Vector2(sensorRange, 0);
+                Sensor.transform.localPosition = new Vector2(sensorRange, Sensor.transform.localPosition.y);
                 break;
             case 8:
                 Sensor.transform.position = new Vector2(sensorPos.x, sensorRange);
@@ -342,12 +344,12 @@ public class Bomberman : MonoBehaviour
     }
     void GetInput()
     {
-        buttonLeft = Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow);
-        buttonRight = Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow);
-        buttonUp = Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.DownArrow);
-        buttonDown = Input.GetKey(KeyCode.DownArrow) && !Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.UpArrow);
-        buttonBomb = Input.GetKeyDown(KeyCode.Z);
-        buttonDetonate = Input.GetKeyDown(KeyCode.X);
+        buttonLeft = Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S);
+        buttonRight = Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S);
+        buttonUp = Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S);
+        buttonDown = Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.W);
+        buttonBomb = Input.GetMouseButton(0);
+        buttonDetonate = Input.GetMouseButton(1);
     }
     void Animate()
     {
