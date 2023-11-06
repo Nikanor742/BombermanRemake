@@ -47,6 +47,11 @@ public class DesktopInput : MonoBehaviour,IInput
     {
         buttonUp = Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S);
     }
+    public void ShowDetonatorButton()
+    {
+        ControllHelp.Instance.ShowDetonateButton();
+    }
+
     private void Update()
     {
         GetButtonUp();
@@ -56,4 +61,6 @@ public class DesktopInput : MonoBehaviour,IInput
         GetButtonBomb();
         GetButtonDetonate();
     }
+
+   
 }

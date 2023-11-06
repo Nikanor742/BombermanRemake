@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class MobileInput : MonoBehaviour,IInput
 {
@@ -20,46 +17,47 @@ public class MobileInput : MonoBehaviour,IInput
     private bool buttonDetonate;
 
     private Joystick _joystick;
-    [SerializeField] private Button UIbuttonBomb;
-    [SerializeField] private Button UIbuttonDetonate;
+    [SerializeField] private MobileButton UIbuttonBomb;
+    [SerializeField] private MobileButton UIbuttonDetonate;
 
     public void GetButtonBomb()
     {
-
+        buttonBomb = UIbuttonBomb.isPressed;
     }
 
     public void GetButtonDetonate()
     {
-
+        buttonDetonate = UIbuttonDetonate.isPressed;
     }
 
     public void GetButtonDown()
     {
-        /*float y = _joystick.Direction.y;
-        float x = _joystick.Direction.x;
-        buttonDown = x > y && y < 0 ? true : false;*/
+        float y = _joystick.Direction.y;
+        buttonDown = y <= -0.5f ? true : false;
     }
 
     public void GetButtonLeft()
     {
-        float y = _joystick.Direction.y;
         float x = _joystick.Direction.x;
-        buttonLeft = y < x && x < 0 ? true : false;
+        buttonLeft = x <= -0.5f ? true : false;
     }
 
     public void GetButtonRight()
     {
-        /*float y = _joystick.Direction.y;
         float x = _joystick.Direction.x;
-        buttonLeft = y > x && x > 0 ? true : false;*/
+        buttonRight = x >= 0.5f ? true : false;
     }
 
     public void GetButtonUp()
     {
-        /*float y = _joystick.Direction.y;
-        float x = _joystick.Direction.x;
-        buttonUp = x < y && y > 0 ? true : false;*/
+        float y = _joystick.Direction.y;
+        buttonUp = y >= 0.5f ? true : false;
     }
+    public void ShowDetonatorButton()
+    {
+        UIbuttonDetonate.gameObject.SetActive(true);
+    }
+
     private void Awake()
     {
         _joystick = GetComponentInChildren<Joystick>();

@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -30,49 +28,55 @@ public class UI : MonoBehaviour
 
         if (SaveExtension.player.firstStart)
         {
-            FirstLanguageSetup();
+            StartCoroutine(FirstLanguageSetup());
             SaveExtension.player.firstStart = false;
             SaveExtension.Save();
         }
         SetLanguage();
     }
 
-    private async void FirstLanguageSetup()
+    private IEnumerator FirstLanguageSetup()
     {
-        await Task.Delay(10);
-        if (YandexGame.EnvironmentData.language == "ru")
+        yield return new WaitForSeconds(0.01f);
+        if (YandexGame.SDKEnabled)
         {
-            SaveExtension.player.language = ELanguages.RU;
-        }
-        else if (YandexGame.EnvironmentData.language == "en")
-        {
-            SaveExtension.player.language = ELanguages.EN;
-        }
-        else if (YandexGame.EnvironmentData.language == "tr")
-        {
-            SaveExtension.player.language = ELanguages.TR;
-        }
-        else
-        {
-            if (YandexGame.EnvironmentData.domain == "be" ||
-                YandexGame.EnvironmentData.domain == "kk" ||
-                YandexGame.EnvironmentData.domain == "uk" ||
-                YandexGame.EnvironmentData.domain == "uz")
+            if (YandexGame.EnvironmentData.language == "ru")
             {
                 SaveExtension.player.language = ELanguages.RU;
             }
-            else
+            else if (YandexGame.EnvironmentData.language == "en")
             {
                 SaveExtension.player.language = ELanguages.EN;
             }
+            else if (YandexGame.EnvironmentData.language == "tr")
+            {
+                SaveExtension.player.language = ELanguages.TR;
+            }
+            else
+            {
+                if (YandexGame.EnvironmentData.domain == "be" ||
+                    YandexGame.EnvironmentData.domain == "kk" ||
+                    YandexGame.EnvironmentData.domain == "uk" ||
+                    YandexGame.EnvironmentData.domain == "uz")
+                {
+                    SaveExtension.player.language = ELanguages.RU;
+                }
+                else
+                {
+                    SaveExtension.player.language = ELanguages.EN;
+                }
+            }
+            SetLanguage();
+            SaveExtension.Save();
         }
-        SetLanguage();
-        SaveExtension.Save();
+        else 
+        {
+            StartCoroutine(FirstLanguageSetup());
+        }
     }
 
-    private async void SetLanguage()
+    private void SetLanguage()
     {
-        await Task.Delay(10);
         if (SaveExtension.player.language == ELanguages.RU)
         {
             var button = FindObjectOfType<RUButton>();

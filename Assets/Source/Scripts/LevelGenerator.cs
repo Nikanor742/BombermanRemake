@@ -19,14 +19,23 @@ public class LevelGenerator : MonoBehaviour
     private List<Monster> levelMonsters;
 
     
-   
-    void Start()
+    private void Set()
     {
         int level = SaveExtension.player.level;
-        if (level == 0)
+        if (level == 0 && YandexGame.EnvironmentData.isDesktop)
         {
             ControllHelp.Instance.ShowBasicHelp();
         }
+    }
+
+    void Start()
+    {
+        if (YandexGame.SDKEnabled)
+        {
+            Set();
+        }
+        YandexGame.GetDataEvent += Set;
+        int level = SaveExtension.player.level;
         string text = "";
         if (SaveExtension.player.language == ELanguages.RU)
         {

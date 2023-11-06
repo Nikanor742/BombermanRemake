@@ -3,7 +3,6 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using YG;
 
 public class Bomberman : MonoBehaviour
@@ -54,18 +53,31 @@ public class Bomberman : MonoBehaviour
 
     private IInput _input;
 
+    private void Set()
+    {
+        if (_input == null)
+        {
+            if (YandexGame.EnvironmentData.isDesktop)
+            {
+                _input = gameObject.AddComponent<DesktopInput>();
+            }
+            else if (YandexGame.EnvironmentData.isMobile)
+            {
+                _input = Instantiate(mobileInputPrefab);
+                Camera.main.orthographicSize = 4.5f;
+                Camera.main.transform.position = new Vector3(-7, 6, -10);
+                Camera.main.transform.parent = transform;
+            }
+        }
+    }
 
     void Start()
     {
-        /*if (YandexGame.EnvironmentData.isDesktop)
+        if (YandexGame.SDKEnabled)
         {
-            _input = gameObject.AddComponent<DesktopInput>();
+            Set();
         }
-        else if (YandexGame.EnvironmentData.isMobile)
-        {
-            _input = Instantiate(mobileInputPrefab);
-        }*/
-        _input = Instantiate(mobileInputPrefab);
+        YandexGame.GetDataEvent += Set;
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
         SpeedBoots = 0;
@@ -78,10 +90,9 @@ public class Bomberman : MonoBehaviour
         SaveExtension.game.startFireLevel = SaveExtension.player.fireLevel;
     }
 
-
     void Update()
     {
-        if (playerActive)
+        if (playerActive && _input != null)
         {
             GetDirection();
             HandleSensor();
@@ -185,7 +196,6 @@ public class Bomberman : MonoBehaviour
                 case (EBonusType)6:
                     {
                         GetDetonatorPowerUp();
-                        guiDetonator.SetActive(true);
                         break;
                     }
             }
@@ -229,7 +239,7 @@ public class Bomberman : MonoBehaviour
 
     void GetDetonatorPowerUp()
     {
-        ControllHelp.Instance.ShowDetonateButton();
+        _input.ShowDetonatorButton();        
         HasDetonator = true;
     }
 

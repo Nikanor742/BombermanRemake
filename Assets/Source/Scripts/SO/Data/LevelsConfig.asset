@@ -16,7 +16,7 @@ MonoBehaviour:
   - monsters:
     - monsterType: 0
       count: 2
-    bonuses: 01000000
+    bonuses: 010000000600000006000000060000000600000006000000
   - monsters:
     - monsterType: 0
       count: 3

@@ -14,5 +14,6 @@ interface IInput
     void GetButtonDown();
     void GetButtonBomb();
     void GetButtonDetonate();
+    void ShowDetonatorButton();
 
 }

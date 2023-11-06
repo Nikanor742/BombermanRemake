@@ -359,7 +359,6 @@ namespace YG
             {
                 LanguageRequest();
             }
-
             GetDataEvent?.Invoke();
             onResetProgress?.Invoke();
 
