@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using Cinemachine;
+using DG.Tweening;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -64,9 +65,10 @@ public class Bomberman : MonoBehaviour
             else if (YandexGame.EnvironmentData.isMobile)
             {
                 _input = Instantiate(mobileInputPrefab);
-                Camera.main.orthographicSize = 4.5f;
-                Camera.main.transform.position = new Vector3(-7, 6, -10);
-                Camera.main.transform.parent = transform;
+                var camera = FindObjectOfType<CinemachineVirtualCamera>();
+                camera.m_Lens.OrthographicSize = 4.5f;
+                camera.Follow = transform;
+                camera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = new Vector3(0, 0, -10);
             }
         }
     }
