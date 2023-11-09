@@ -7,22 +7,24 @@ public class Enemy : MonoBehaviour
 {
     public EMonsterType monsterType;
     public GameObject DeathEffect;
-    public List<Vector2> CellsToMoveR;
-    public List<Vector2> CellsToMoveL;
-    public List<Vector2> CellsToMoveU;
-    public List<Vector2> CellsToMoveD;
-    public List<int> Directions;
+    [HideInInspector] public List<Vector2> CellsToMoveR;
+    [HideInInspector] public List<Vector2> CellsToMoveL;
+    [HideInInspector] public List<Vector2> CellsToMoveU;
+    [HideInInspector] public List<Vector2> CellsToMoveD;
+    [HideInInspector] public List<int> Directions;
     public LayerMask StopLayer;
     public float speed = 1f;
     public bool isMoving;
+    public bool smart;
 
     private int MoveLength = 19;
-    private int randomDirections;
+    private int moveDirection;
+    private Bomberman player;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = FindObjectOfType<Bomberman>();
         isMoving = false;
     }
 
@@ -63,15 +65,58 @@ public class Enemy : MonoBehaviour
         CellsToMoveU.Clear();
         
     }
+    Vector2 GetPosOnDirection(Vector2 pos, int direction)
+    {
+        switch (direction)
+        {
+            case 2:
+                return new Vector2(pos.x, pos.y - 1f);
+            case 4:
+                return new Vector2(pos.x-1f, pos.y);
+            case 6:
+                return new Vector2(pos.x + 1f, pos.y);
+            case 8:
+                return new Vector2(pos.x, pos.y + 1f);
+        }
+        return Vector2.zero;
+    }
     void Move()
     {
-        
+        Vector2 playerPos = player.transform.position;
+        playerPos.x = Mathf.Round(playerPos.x);
+        playerPos.y = Mathf.Round(playerPos.y);
         if (!isMoving)
         {
-            randomDirections = Random.Range(0, Directions.Count);
-            
+            if (smart)
+            {
+                if (Directions.Count > 1)
+                {
+                    moveDirection = 0;
+                    for (int i = 0; i < Directions.Count; i++)
+                    {
+                        Vector2 pos = GetPosOnDirection(transform.position, Directions[i]);
+                        Vector2 posCurrent = GetPosOnDirection(transform.position, Directions[moveDirection]);
+                        if (Vector2.Distance(playerPos, pos) < Vector2.Distance(playerPos, posCurrent))
+                        {
+                            moveDirection = i;
+                        }
+                    }
+                }
+                else if (Directions.Count == 1)
+                {
+                    moveDirection = 0;
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                moveDirection = Random.Range(0, Directions.Count);
+            }
         }
-        switch (Directions[randomDirections])
+        switch (Directions[moveDirection])
         {
             case 2:
                 {
@@ -105,13 +150,13 @@ public class Enemy : MonoBehaviour
                         ClearDirections();
                         Directions.Clear();
                         CalculateMoveDirections();
-                        randomDirections = Random.Range(0, Directions.Count);
+                        moveDirection = Random.Range(0, Directions.Count);
                         return;
-                       
+
                     }
                     break;
                 }
-                
+
             case 4:
                 {
                     try
@@ -137,21 +182,21 @@ public class Enemy : MonoBehaviour
                             Directions.Clear();
                             CalculateMoveDirections();
                         }
-                      
+
                     }
                     catch
                     {
-                        
+
                         isMoving = true;
                         ClearDirections();
                         Directions.Clear();
                         CalculateMoveDirections();
-                        randomDirections = Random.Range(0, Directions.Count);
+                        moveDirection = Random.Range(0, Directions.Count);
                         return;
                     }
                     break;
                 }
-                
+
             case 6:
                 {
                     try
@@ -180,17 +225,17 @@ public class Enemy : MonoBehaviour
                     }
                     catch
                     {
-                     
+
                         isMoving = true;
                         ClearDirections();
                         Directions.Clear();
                         CalculateMoveDirections();
-                        randomDirections = Random.Range(0, Directions.Count);
+                        moveDirection = Random.Range(0, Directions.Count);
                         return;
                     }
                     break;
                 }
-                
+
             case 8:
                 {
                     try
@@ -219,19 +264,17 @@ public class Enemy : MonoBehaviour
                     }
                     catch
                     {
-                     
+
                         isMoving = true;
                         ClearDirections();
                         Directions.Clear();
                         CalculateMoveDirections();
-                        randomDirections = Random.Range(0, Directions.Count);
+                        moveDirection = Random.Range(0, Directions.Count);
                         return;
                     }
                     break;
                 }
         }
-
-     
     }
 
     public void CalculateMoveDirections()

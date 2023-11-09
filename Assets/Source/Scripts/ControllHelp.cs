@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using System.Collections;
 using UnityEngine;
 
 public class ControllHelp : MonoBehaviour
@@ -13,30 +13,33 @@ public class ControllHelp : MonoBehaviour
         Instance = this;
     }
 
-    public async void ShowBasicHelp()
+    private IEnumerator BasicHelp()
     {
         foreach (var b in basicElements)
         {
             b.SetActive(true);
         }
-        await Task.Delay(15000);
-        if (this != null)
+        yield return new WaitForSeconds(15);
+        foreach (var b in basicElements)
         {
-            foreach (var b in basicElements)
-            {
-                b.SetActive(false);
-            }
+            b.SetActive(false);
         }
-        
     }
 
-    public async void ShowDetonateButton()
+    private IEnumerator DetonateButton()
     {
         detonateButton.SetActive(true);
-        await Task.Delay(15000);
-        if (this != null)
-        {
-            detonateButton.SetActive(false);
-        }
+        yield return new WaitForSeconds(15f);
+        detonateButton.SetActive(false);
+    }
+
+    public void ShowBasicHelp()
+    {
+        StartCoroutine(BasicHelp());
+    }
+
+    public void ShowDetonateButton()
+    {
+        StartCoroutine(DetonateButton());
     }
 }

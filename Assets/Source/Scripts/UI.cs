@@ -17,8 +17,10 @@ public class UI : MonoBehaviour
 
     private void Awake()
     {
+        SaveExtension.DiscardSaves();
         helpWindow = FindObjectOfType<HelpWindow>();
         settingsWindow = FindObjectOfType<SettingsWindow>();
+        leaderWindow = FindObjectOfType<LeaderWindow>();
         startButton.onClick.AddListener(StartGame);
         helpButton.onClick.AddListener(ShowHelp);
         settingsButton.onClick.AddListener(ShowSettings);
@@ -26,12 +28,13 @@ public class UI : MonoBehaviour
 
         SaveExtension.Override();
 
-        if (SaveExtension.player.firstStart)
+        /*if (SaveExtension.player.firstStart)
         {
             StartCoroutine(FirstLanguageSetup());
             SaveExtension.player.firstStart = false;
             SaveExtension.Save();
-        }
+        }*/
+        StartCoroutine(FirstLanguageSetup());
         SetLanguage();
     }
 

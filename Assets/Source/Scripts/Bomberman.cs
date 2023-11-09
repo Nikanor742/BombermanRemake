@@ -72,9 +72,20 @@ public class Bomberman : MonoBehaviour
             }
         }
     }
+    private IEnumerator Sets()
+    {
+        yield return new WaitForSeconds(1f);
+        //Debug.Log(YandexGame.SDKEnabled);
+    }
 
+    private void Awake()
+    {
+        //Debug.Log(YandexGame.SDKEnabled);
+    }
     void Start()
     {
+        StartCoroutine(Sets());
+        //Debug.Log(YandexGame.SDKEnabled);
         if (YandexGame.SDKEnabled)
         {
             Set();
@@ -94,6 +105,7 @@ public class Bomberman : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(YandexGame.SDKEnabled);
         if (playerActive && _input != null)
         {
             GetDirection();
@@ -198,6 +210,7 @@ public class Bomberman : MonoBehaviour
                 case (EBonusType)6:
                     {
                         GetDetonatorPowerUp();
+                        guiDetonator.SetActive(true);
                         break;
                     }
             }

@@ -61,6 +61,7 @@ MonoBehaviour:
     m_Bits: 768
   speed: 2
   isMoving: 0
+  smart: 1
 --- !u!50 &2855313231059590177
 Rigidbody2D:
   serializedVersion: 4

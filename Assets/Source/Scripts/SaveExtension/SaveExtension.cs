@@ -12,6 +12,13 @@ public class SaveExtension
         PlayerPrefs.SetString(playerDataKey, @string);
     }
 
+    public static void DiscardSaves()
+    {
+        player = new PlayerData();
+        var @string = JsonUtility.ToJson(player);
+        PlayerPrefs.SetString(playerDataKey, @string);
+    }
+
     public static void Override()
     {
         player = new PlayerData();

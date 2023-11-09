@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using YG;
 
 public class WinSystem : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class WinSystem : MonoBehaviour
     {
         if(SaveExtension.game.MonsterCountInLevel == 0)
         {
+            YandexGame.NewLeaderboardScores("MainLeaderboard", SaveExtension.player.score);
             AudioPlayer.Instance.PlaySound(ESoundType.levelComplete);
             ScoreSystem.Instance.AddScore(EScoreType.levelComplete);
             var allBricksNoBonus = FindObjectsOfType<Brick>().Where(b => b.hiddenPowerUp == null).ToArray();
