@@ -72,25 +72,13 @@ public class Bomberman : MonoBehaviour
             }
         }
     }
-    private IEnumerator Sets()
+    private void OnYandexSDKInitialized()
     {
-        yield return new WaitForSeconds(1f);
-        //Debug.Log(YandexGame.SDKEnabled);
-    }
-
-    private void Awake()
-    {
-        //Debug.Log(YandexGame.SDKEnabled);
+        Set();
     }
     void Start()
     {
-        StartCoroutine(Sets());
-        //Debug.Log(YandexGame.SDKEnabled);
-        if (YandexGame.SDKEnabled)
-        {
-            Set();
-        }
-        YandexGame.GetDataEvent += Set;
+        SaveExtension.game.OnYandexSDKInitialized += OnYandexSDKInitialized;
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
         SpeedBoots = 0;
@@ -105,7 +93,6 @@ public class Bomberman : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(YandexGame.SDKEnabled);
         if (playerActive && _input != null)
         {
             GetDirection();
@@ -382,5 +369,9 @@ public class Bomberman : MonoBehaviour
         animator.SetTrigger("Portal");
         animator.SetInteger("Direction",0);
         transform.DOMove(portalPos, 0.3f);
+    }
+    private void OnDestroy()
+    {
+        SaveExtension.game.OnYandexSDKInitialized -= OnYandexSDKInitialized;
     }
 }

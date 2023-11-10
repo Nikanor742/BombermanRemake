@@ -27,14 +27,15 @@ public class LevelGenerator : MonoBehaviour
             ControllHelp.Instance.ShowBasicHelp();
         }
     }
+    private void OnYandexSDKInitialized()
+    {
+        Set();
+    }
 
     void Start()
     {
-        if (YandexGame.SDKEnabled)
-        {
-            Set();
-        }
-        YandexGame.GetDataEvent += Set;
+        SaveExtension.game.OnYandexSDKInitialized += OnYandexSDKInitialized;
+
         int level = SaveExtension.player.level;
         string text = "";
         if (SaveExtension.player.language == ELanguages.RU)
@@ -153,5 +154,10 @@ public class LevelGenerator : MonoBehaviour
                 brick.hiddenPowerUp.gameObject.SetActive(false);
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        SaveExtension.game.OnYandexSDKInitialized -= OnYandexSDKInitialized;
     }
 }

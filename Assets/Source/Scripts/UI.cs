@@ -17,7 +17,6 @@ public class UI : MonoBehaviour
 
     private void Awake()
     {
-        SaveExtension.DiscardSaves();
         helpWindow = FindObjectOfType<HelpWindow>();
         settingsWindow = FindObjectOfType<SettingsWindow>();
         leaderWindow = FindObjectOfType<LeaderWindow>();
@@ -25,57 +24,54 @@ public class UI : MonoBehaviour
         helpButton.onClick.AddListener(ShowHelp);
         settingsButton.onClick.AddListener(ShowSettings);
         leaderButton.onClick.AddListener(ShowLeader);
-
-        SaveExtension.Override();
-
-        /*if (SaveExtension.player.firstStart)
+    }
+    private void Start()
+    {
+        SaveExtension.game.OnYandexSDKInitialized += OnSDKInit;
+    }
+    private void OnSDKInit()
+    {
+        if (SaveExtension.player.firstStart)
         {
-            StartCoroutine(FirstLanguageSetup());
+            FirstLanguageSetup();
             SaveExtension.player.firstStart = false;
             SaveExtension.Save();
-        }*/
-        StartCoroutine(FirstLanguageSetup());
-        SetLanguage();
-    }
-
-    private IEnumerator FirstLanguageSetup()
-    {
-        yield return new WaitForSeconds(0.01f);
-        if (YandexGame.SDKEnabled)
+        }
+        else
         {
-            if (YandexGame.EnvironmentData.language == "ru")
+            SetLanguage();
+        }
+    }
+    private void FirstLanguageSetup()
+    {
+        if (YandexGame.EnvironmentData.language == "ru")
+        {
+            SaveExtension.player.language = ELanguages.RU;
+        }
+        else if (YandexGame.EnvironmentData.language == "en")
+        {
+            SaveExtension.player.language = ELanguages.EN;
+        }
+        else if (YandexGame.EnvironmentData.language == "tr")
+        {
+            SaveExtension.player.language = ELanguages.TR;
+        }
+        else
+        {
+            if (YandexGame.EnvironmentData.domain == "be" ||
+                YandexGame.EnvironmentData.domain == "kk" ||
+                YandexGame.EnvironmentData.domain == "uk" ||
+                YandexGame.EnvironmentData.domain == "uz")
             {
                 SaveExtension.player.language = ELanguages.RU;
             }
-            else if (YandexGame.EnvironmentData.language == "en")
+            else
             {
                 SaveExtension.player.language = ELanguages.EN;
             }
-            else if (YandexGame.EnvironmentData.language == "tr")
-            {
-                SaveExtension.player.language = ELanguages.TR;
-            }
-            else
-            {
-                if (YandexGame.EnvironmentData.domain == "be" ||
-                    YandexGame.EnvironmentData.domain == "kk" ||
-                    YandexGame.EnvironmentData.domain == "uk" ||
-                    YandexGame.EnvironmentData.domain == "uz")
-                {
-                    SaveExtension.player.language = ELanguages.RU;
-                }
-                else
-                {
-                    SaveExtension.player.language = ELanguages.EN;
-                }
-            }
-            SetLanguage();
-            SaveExtension.Save();
         }
-        else 
-        {
-            StartCoroutine(FirstLanguageSetup());
-        }
+        SetLanguage();
+        SaveExtension.Save();
     }
 
     private void SetLanguage()
@@ -123,5 +119,6 @@ public class UI : MonoBehaviour
         helpButton.onClick.RemoveAllListeners();
         settingsButton.onClick.RemoveAllListeners();
         leaderButton.onClick.RemoveAllListeners();
+        SaveExtension.game.OnYandexSDKInitialized -= OnSDKInit;
     }
 }

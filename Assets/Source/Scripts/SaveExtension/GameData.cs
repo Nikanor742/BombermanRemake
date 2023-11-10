@@ -12,6 +12,7 @@ public class GameData
             OnMonsterCountChanged?.Invoke();
         }
     }
+    public event Action OnYandexSDKInitialized;
     public event Action OnMonsterCountChanged;
 
     public int startFireLevel;
@@ -20,5 +21,10 @@ public class GameData
     public RUButton ruButton;
     public ENButton enButton;
     public TRButton trButton;
+
+    public void InvokeOnYandexSDKInitialized()
+    {
+        OnYandexSDKInitialized?.Invoke();
+    }
     
 }

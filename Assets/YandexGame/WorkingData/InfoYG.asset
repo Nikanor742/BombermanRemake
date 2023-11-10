@@ -29,7 +29,7 @@ MonoBehaviour:
   fullscreenAdInterval: 60
   durationOfAdSimulation: 0.5
   testErrorOfRewardedAdsInEditor: 0
-  saveCloud: 1
+  saveCloud: 0
   flush: 0
   localSaveSync: 1
   saveCloudInterval: 5
@@ -176,8 +176,8 @@ MonoBehaviour:
       rank: 2
       score: 10
   LocalizationEnable: 1
-  callingLanguageCheck: 1
-  translateMethod: 0
+  callingLanguageCheck: 2
+  translateMethod: 1
   domainAutoLocalization: com
   CSVFileTranslate:
     format: 0
