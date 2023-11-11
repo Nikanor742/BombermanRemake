@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using DG.Tweening;
 
 public class Enemy : MonoBehaviour
 {
@@ -16,15 +17,21 @@ public class Enemy : MonoBehaviour
     public float speed = 1f;
     public bool isMoving;
     public bool smart;
+    public int health = 1;
 
     private int MoveLength = 19;
     private int moveDirection;
     private Bomberman player;
+    private Health healthDraw;
+    private SpriteRenderer sprite;
 
     // Start is called before the first frame update
     void Start()
     {
+        sprite = GetComponent<SpriteRenderer>();
         player = FindObjectOfType<Bomberman>();
+        healthDraw = GetComponentInChildren<Health>();
+        healthDraw.InitHearts(health);
         isMoving = false;
     }
 
@@ -32,11 +39,27 @@ public class Enemy : MonoBehaviour
     {
         if (source == 1)
         {
-            AudioPlayer.Instance.PlaySound(ESoundType.monster);
-            ScoreSystem.Instance.AddScore(EScoreType.monsterDefeat);
-            SaveExtension.game.MonsterCountInLevel--;
-            Instantiate(DeathEffect, transform.position, transform.rotation);
-            Destroy(gameObject);
+            health -= 1;
+            healthDraw.DecreaseHeart();
+            if (sprite != null)
+            {
+                DOTween.Kill(sprite);
+                sprite.DOColor(Color.red, 0.2f).OnComplete(() =>
+                {
+                    if (sprite != null)
+                    {
+                        sprite.DOColor(Color.white, 0.3f);
+                    }
+                });
+            }
+            if (health <= 0)
+            {
+                AudioPlayer.Instance.PlaySound(ESoundType.monster);
+                ScoreSystem.Instance.AddScore(EScoreType.monsterDefeat);
+                SaveExtension.game.MonsterCountInLevel--;
+                Instantiate(DeathEffect, transform.position, transform.rotation);
+                Destroy(gameObject);
+            }
         }
     }
 

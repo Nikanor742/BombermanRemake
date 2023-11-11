@@ -226,11 +226,15 @@ public class Bomberman : MonoBehaviour
 
     void GetNoclipWallsPowerUp()
     {
+        SaveExtension.player.hasNoClipWall = true;
+        SaveExtension.Save();
         NoclipWalls = true;
     }
 
     void GetNoclipFirePowerUp()
     {
+        SaveExtension.player.hasNoClipFire = true;
+        SaveExtension.Save();
         NoclipFire = true;
     }
 
@@ -241,8 +245,29 @@ public class Bomberman : MonoBehaviour
 
     void GetDetonatorPowerUp()
     {
+        SaveExtension.player.hasDetonator = true;
+        SaveExtension.Save();
         _input.ShowDetonatorButton();        
         HasDetonator = true;
+    }
+
+    void GetBonusSaves()
+    {
+        if (SaveExtension.player.hasDetonator)
+        {
+            HasDetonator = true;
+            guiDetonator.SetActive(true);
+        }
+        if (SaveExtension.player.hasNoClipFire)
+        {
+            NoclipFire = true;
+            guiNoClipFire.SetActive(true);
+        }
+        if (SaveExtension.player.hasNoClipWall)
+        {
+            NoclipWalls = true;
+            guiNoClipWals.SetActive(true);
+        }
     }
 
     public bool CheckDetonator()

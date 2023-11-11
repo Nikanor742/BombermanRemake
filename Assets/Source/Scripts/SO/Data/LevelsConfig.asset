@@ -15,7 +15,15 @@ MonoBehaviour:
   levels:
   - monsters:
     - monsterType: 0
-      count: 2
+      count: 1
+    - monsterType: 1
+      count: 1
+    - monsterType: 2
+      count: 1
+    - monsterType: 3
+      count: 1
+    - monsterType: 4
+      count: 1
     bonuses: 01000000
   - monsters:
     - monsterType: 0
