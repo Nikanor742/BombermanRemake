@@ -116,7 +116,8 @@ MonoBehaviour:
   speed: 1
   isMoving: 0
   smart: 0
-  health: 2
+  health: 1
+  sprite: {fileID: 3378304229514686320}
 --- !u!50 &3378304229514686324
 Rigidbody2D:
   serializedVersion: 4
@@ -151,8 +152,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: 2
-  BrickDeathEffect: {fileID: 0}
-  RandomPowerUp: {fileID: 0}
+  BrickDeathEffect:
+  - {fileID: 0}
 --- !u!61 &3378304229514686090
 BoxCollider2D:
   m_ObjectHideFlags: 0

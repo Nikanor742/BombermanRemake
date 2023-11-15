@@ -23,27 +23,31 @@ public class Enemy : MonoBehaviour
     private int moveDirection;
     private Bomberman player;
     private Health healthDraw;
-    private SpriteRenderer sprite;
+    public SpriteRenderer sprite;
+
+    private Damage currentDamage;
 
     // Start is called before the first frame update
     void Start()
     {
-        sprite = GetComponent<SpriteRenderer>();
         player = FindObjectOfType<Bomberman>();
         healthDraw = GetComponentInChildren<Health>();
         healthDraw.InitHearts(health);
         isMoving = false;
     }
 
-    public void Damage(int source)
+    public void Damage(Damage damage)
     {
-        if (source == 1)
+        if (damage.source == 1 && damage != currentDamage)
         {
+            currentDamage = damage;
             health -= 1;
             healthDraw.DecreaseHeart();
             if (sprite != null)
             {
                 DOTween.Kill(sprite);
+                DOTween.Kill(transform);
+                transform.DOShakeScale(0.1f);
                 sprite.DOColor(Color.red, 0.2f).OnComplete(() =>
                 {
                     if (sprite != null)
@@ -54,8 +58,10 @@ public class Enemy : MonoBehaviour
             }
             if (health <= 0)
             {
+                DOTween.Kill(sprite);
+                DOTween.Kill(transform);
                 AudioPlayer.Instance.PlaySound(ESoundType.monster);
-                ScoreSystem.Instance.AddScore(EScoreType.monsterDefeat);
+                ScoreSystem.Instance.AddScore(EScoreType.monsterDefeat, transform.position);
                 SaveExtension.game.MonsterCountInLevel--;
                 Instantiate(DeathEffect, transform.position, transform.rotation);
                 Destroy(gameObject);
@@ -105,6 +111,8 @@ public class Enemy : MonoBehaviour
     }
     void Move()
     {
+        if (player == null)
+            return;
         Vector2 playerPos = player.transform.position;
         playerPos.x = Mathf.Round(playerPos.x);
         playerPos.y = Mathf.Round(playerPos.y);

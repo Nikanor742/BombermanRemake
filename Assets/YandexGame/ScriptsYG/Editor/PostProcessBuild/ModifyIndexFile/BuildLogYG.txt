@@ -1,2 +1,2 @@
-Build path: C:/UnityProjects/BomberManBuild
-Build number: 24
+Build path: C:/Users/user/Desktop/UnityProjects/BomberManBuild
+Build number: 26

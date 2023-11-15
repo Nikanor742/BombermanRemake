@@ -117,6 +117,7 @@ MonoBehaviour:
   isMoving: 0
   smart: 0
   health: 2
+  sprite: {fileID: 2855313231059590181}
 --- !u!50 &2855313231059590177
 Rigidbody2D:
   serializedVersion: 4

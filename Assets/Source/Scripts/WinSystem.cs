@@ -20,7 +20,7 @@ public class WinSystem : MonoBehaviour
         {
             YandexGame.NewLeaderboardScores("MainLeaderboard", SaveExtension.player.score);
             AudioPlayer.Instance.PlaySound(ESoundType.levelComplete);
-            ScoreSystem.Instance.AddScore(EScoreType.levelComplete);
+            ScoreSystem.Instance.AddScore(EScoreType.levelComplete,Vector3.zero);
             var allBricksNoBonus = FindObjectsOfType<Brick>().Where(b => b.hiddenPowerUp == null).ToArray();
             var allBricksBonus = FindObjectsOfType<Brick>().Where(b => b.hiddenPowerUp != null).ToArray();
             foreach (var b in allBricksBonus)

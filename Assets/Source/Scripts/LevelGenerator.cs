@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -11,7 +12,8 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] private LevelConfig levelsConfig;
     [SerializeField] private Enemy[] monsters;
     [SerializeField] private PowerUp[] powerUPs;
-    [SerializeField] private Brick Brick;
+    [SerializeField] private Brick[] Brick;
+    [SerializeField] private GameObject[] levels;
 
     private int[,] Level = new int[11,19];
 
@@ -34,6 +36,8 @@ public class LevelGenerator : MonoBehaviour
 
     void Start()
     {
+        int levelIndex = Mathf.Clamp(SaveExtension.player.level / 10, 0, 1);
+        Instantiate(levels[levelIndex]);
         SaveExtension.game.OnYandexSDKInitialized += OnYandexSDKInitialized;
 
         int level = SaveExtension.player.level;
@@ -53,19 +57,35 @@ public class LevelGenerator : MonoBehaviour
         levelText.text = text + (level + 1).ToString();
 
         levelBonuses = new List<EBonusType>();
-        foreach (var b in levelsConfig.levels[level].bonuses)
-            levelBonuses.Add(b);
-
         levelMonsters = new List<Monster>();
-        foreach (var m in levelsConfig.levels[level].monsters)
-        {
-            var newMonster = new Monster();
-            newMonster.Clone(m);
-            levelMonsters.Add(newMonster);
-        }
-            
-        
+        if (level < 20)
+        {            
+            foreach (var b in levelsConfig.levels[level].bonuses)
+                levelBonuses.Add(b);
 
+            foreach (var m in levelsConfig.levels[level].monsters)
+            {
+                var newMonster = new Monster();
+                newMonster.Clone(m);
+                levelMonsters.Add(newMonster);
+            }
+        }
+        else
+        {
+            int randomBonusCount = UnityEngine.Random.Range(0, 2);
+            for (int i = 0; i < randomBonusCount; i++)
+            {
+                levelBonuses.Add((EBonusType)UnityEngine.Random.Range(0, Enum.GetNames(typeof(EBonusType)).Length));
+            }
+            int randomMonsterCount = UnityEngine.Random.Range(5, 10);
+            for (int i = 0; i < randomMonsterCount; i++)
+            {
+                var newMonster = new Monster();
+                newMonster.monsterType = (EMonsterType)UnityEngine.Random.Range(0, Enum.GetNames(typeof(EMonsterType)).Length);
+                newMonster.count = 1;
+                levelMonsters.Add(newMonster);
+            }
+        }
         int count = 6;
         Level[2, 0] = 1;
         Level[0, 2] = 1;
@@ -87,7 +107,7 @@ public class LevelGenerator : MonoBehaviour
                 {
                     continue;
                 }
-                int randBrick = Random.Range(1, 101);
+                int randBrick = UnityEngine.Random.Range(1, 101);
                 if (randBrick >= 0 && randBrick <= 50)
                 {
                     Level[i, j] = 1;
@@ -116,7 +136,7 @@ public class LevelGenerator : MonoBehaviour
     }
     private void CreateMonster(Vector2 pos)
     {
-        int randomValue = Random.Range(0, 100);
+        int randomValue = UnityEngine.Random.Range(0, 100);
         if (randomValue >= 80)
         {
             if (levelMonsters.Count != 0)
@@ -137,12 +157,13 @@ public class LevelGenerator : MonoBehaviour
     }
     private void CreateBrick(Vector2 pos)
     {
-        var brick = Instantiate(Brick, pos, transform.rotation);
+        int brickIndex = Mathf.Clamp(SaveExtension.player.level / 10, 0, 1);
+        var brick = Instantiate(Brick[brickIndex], pos, transform.rotation);
         CreateBonus(pos,brick);
     }
     private void CreateBonus(Vector2 pos,Brick brick)
     {
-        int randomValue = Random.Range(0, 100);
+        int randomValue = UnityEngine.Random.Range(0, 100);
         if(randomValue >= 90)
         {
             if (levelBonuses.Count != 0)

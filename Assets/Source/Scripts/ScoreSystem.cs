@@ -7,6 +7,7 @@ using YG;
 public class ScoreSystem : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private ScoreDrawComponent scoreDraw;
     [SerializeField] private ScoreConfig scoreConfig;
 
     public static ScoreSystem Instance { get; private set; }
@@ -39,13 +40,15 @@ public class ScoreSystem : MonoBehaviour
         scoreText.text = text + SaveExtension.player.score.ToString();
     }
 
-    public void AddScore(EScoreType scoreType)
+    public void AddScore(EScoreType scoreType, Vector3 pos)
     {
         foreach (var s in scoreConfig.scoreSettings)
         {
             if (s.scoreType == scoreType)
             {
-                SaveExtension.player.score += s.addScore;
+                float score = s.addScore * (Mathf.Clamp(SaveExtension.player.level, 1, Mathf.Infinity))/2;
+                SaveExtension.player.score += (int)score;
+                Instantiate(scoreDraw, pos, Quaternion.identity).score.text="+" + ((int)score).ToString();
                 SaveExtension.Save();
                 SetScoreText();
                 break;

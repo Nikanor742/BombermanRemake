@@ -9,8 +9,8 @@ public class Damage : MonoBehaviour
 
     public int source;
 
-    public GameObject BrickDeathEffect;
-    public GameObject RandomPowerUp;
+    public GameObject[] BrickDeathEffect;
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
@@ -19,19 +19,25 @@ public class Damage : MonoBehaviour
         }
         if (other.tag == "Enemy")
         {
-            other.GetComponent<Enemy>().Damage(source);
+            other.GetComponent<Enemy>().Damage(this);
         }
         if (other.TryGetComponent(out Brick brick) && source == 1)
         {
-            ScoreSystem.Instance.AddScore(EScoreType.brickExplosion);
-            if (brick.hiddenPowerUp != null)
-                brick.hiddenPowerUp.gameObject.SetActive(true);
+            if (brick.active)
+            {
+                brick.active = false;
+                ScoreSystem.Instance.AddScore(EScoreType.brickExplosion, transform.position);
+                if (brick.hiddenPowerUp != null)
+                    brick.hiddenPowerUp.gameObject.SetActive(true);
 
-            if (brick.hiddenPortal != null)
-                brick.hiddenPortal.rb.simulated = true;
+                if (brick.hiddenPortal != null)
+                    brick.hiddenPortal.rb.simulated = true;
 
-            Destroy(other.gameObject);
-            Instantiate(BrickDeathEffect, transform.position, transform.rotation);
+                Destroy(other.gameObject);
+                int brickIndex = Mathf.Clamp(SaveExtension.player.level / 10, 0, 1);
+                Instantiate(BrickDeathEffect[brickIndex], brick.transform.position, transform.rotation);
+            }
+            
         }
     }
 

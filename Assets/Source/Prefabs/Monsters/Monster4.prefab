@@ -62,8 +62,9 @@ MonoBehaviour:
     m_Bits: 768
   speed: 2
   isMoving: 0
-  smart: 1
+  smart: 0
   health: 2
+  sprite: {fileID: 5698010335243554862}
 --- !u!50 &2855313231059590177
 Rigidbody2D:
   serializedVersion: 4
@@ -355,6 +356,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75433554313639845880ecdd0398e73e, type: 3}
+--- !u!212 &5698010335243554862 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3226765396276041180, guid: 75433554313639845880ecdd0398e73e,
+    type: 3}
+  m_PrefabInstance: {fileID: 7193550691963241970}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5698010335562761584 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3226765396728414338, guid: 75433554313639845880ecdd0398e73e,

@@ -16,6 +16,6 @@ MonoBehaviour:
   - scoreType: 2
     addScore: 10
   - scoreType: 0
-    addScore: 50
+    addScore: 30
   - scoreType: 1
     addScore: 100

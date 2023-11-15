@@ -6,6 +6,8 @@ public class GameUI : MonoBehaviour
 {
     [SerializeField] private Button restartButton;
     [SerializeField] private Button mainMenuButton;
+    [SerializeField] public GameObject death;
+    [SerializeField] public RewardButton adButton;
 
     private void Awake()
     {

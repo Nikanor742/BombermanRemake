@@ -15,6 +15,10 @@ public class Bomberman : MonoBehaviour
     private bool NoclipBombs;
     private bool HasDetonator;
 
+    private bool handleBomb = true;
+    private bool handleDetonator = true;
+
+    private bool dead;
     private bool canMove;
     private bool InsideBomb;
     private bool InsideFire;
@@ -45,7 +49,7 @@ public class Bomberman : MonoBehaviour
     public GameObject guiNoClipBomb;
     public GameObject guiNoClipFire;
     public GameObject guiNoClipWals;
-    public GameObject guiDeath;
+    public GameUI gui;
 
     private SpriteRenderer sprite;
     private Animator animator;
@@ -75,6 +79,7 @@ public class Bomberman : MonoBehaviour
     private void OnYandexSDKInitialized()
     {
         Set();
+        YandexGame.RewardVideoEvent += AddRewardedLife;
     }
     void Start()
     {
@@ -89,6 +94,7 @@ public class Bomberman : MonoBehaviour
         TextLife.text = Life.ToString();
         SaveExtension.game.startBombLevel = SaveExtension.player.bombLevel;
         SaveExtension.game.startFireLevel = SaveExtension.player.fireLevel;
+        GetBonusSaves();
     }
 
     void Update()
@@ -103,6 +109,16 @@ public class Bomberman : MonoBehaviour
         }
     }
 
+    private void AddRewardedLife(int ID)
+    {
+        if (ID == 0)
+        {
+            SaveExtension.player.lifeCount = 1;
+            SaveExtension.Save();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
+
     IEnumerator ReloadScene()
     {
         AudioPlayer.Instance.PlaySound(ESoundType.fail);
@@ -114,20 +130,22 @@ public class Bomberman : MonoBehaviour
     }
     public void Damage(int source)
     {
-        if (source == 2)
+        if (source == 2 && !dead)
         {
+            dead = true;
             GetComponent<SpriteRenderer>().enabled = false;
             GetComponent<Bomberman>().enabled = false;
             Instantiate(DeathEffect, transform.position, transform.rotation);
             StartCoroutine(ReloadScene());
             
         }
-        else if(source == 1 && !NoclipFire)
+        else if(source == 1 && !NoclipFire && !dead)
         {
+            dead = true;
             GetComponent<SpriteRenderer>().enabled = false;
             GetComponent<Bomberman>().enabled = false;
             Instantiate(DeathEffect, transform.position, transform.rotation);
-            StartCoroutine(ReloadScene());   
+            StartCoroutine(ReloadScene());
         }
     }
    
@@ -136,20 +154,40 @@ public class Bomberman : MonoBehaviour
         Life--;
         TextLife.text = Life.ToString();
         SaveExtension.player.lifeCount = Life;
-        SaveExtension.Save();
-        Destroy(gameObject);
+        SaveExtension.player.hasDetonator = false;
+        SaveExtension.player.hasNoClipBomb = false;
+        SaveExtension.player.hasNoClipWall = false;
+        SaveExtension.player.hasNoClipFire = false;
+        //Destroy(gameObject);
         if (Life <= 0)
         {
+            gui.death.SetActive(true);
             AudioPlayer.Instance.StopAllSounds();
             AudioPlayer.Instance.PlaySound(ESoundType.dead);
             SaveExtension.player.lifeCount = 3;
-            SaveExtension.Save();
-            guiDeath.SetActive(true);
+            if (SaveExtension.player.firstDeathAd)
+            {
+                SaveExtension.player.firstDeathAd = false;
+                gui.adButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                SaveExtension.player.firstDeathAd = true;
+                gui.adButton.gameObject.SetActive(false);
+                SaveExtension.player.level = 0;
+                SaveExtension.player.fireLevel = 1;
+                SaveExtension.player.bombLevel = 1;
+                SaveExtension.player.hasDetonator = false;
+                SaveExtension.player.hasNoClipBomb = false;
+                SaveExtension.player.hasNoClipWall = false;
+                SaveExtension.player.hasNoClipFire = false;
+            }
         }
         else
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+        SaveExtension.Save();
     }
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -305,17 +343,32 @@ public class Bomberman : MonoBehaviour
                 break;
         }
     }
+    private IEnumerator TimeToHandleBomb()
+    {
+        yield return new WaitForSeconds(0.1f);
+        handleBomb = true;
+    }
+    private IEnumerator TimeToHandleDetonator()
+    {
+        yield return new WaitForSeconds(0.1f);
+        handleDetonator = true;
+    }
     void HandleBombs()
     {
         if (_input.ButtonBomb && GameObject.FindGameObjectsWithTag("Bomb").Length < SaveExtension.player.bombLevel
             && !InsideBomb
             && !InsideFire
-            && !InsideBrick)
+            && !InsideBrick
+            && handleBomb)
         {
+            handleBomb = false;
+            StartCoroutine(TimeToHandleBomb());
             Instantiate(Bomb, new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), transform.rotation);
         }
-        if (_input.ButtonDetonate && HasDetonator)
+        if (_input.ButtonDetonate && HasDetonator && handleDetonator)
         {
+            handleDetonator = false;
+            StartCoroutine(TimeToHandleDetonator());
             var bombs = FindObjectsOfType<Bomb>();
             foreach(var bomb in bombs)
             {
@@ -397,6 +450,7 @@ public class Bomberman : MonoBehaviour
     }
     private void OnDestroy()
     {
+        YandexGame.RewardVideoEvent -= AddRewardedLife;
         SaveExtension.game.OnYandexSDKInitialized -= OnYandexSDKInitialized;
     }
 }

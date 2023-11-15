@@ -86,7 +86,13 @@ public class Bomb : MonoBehaviour
     {
         AudioPlayer.Instance.PlaySound(ESoundType.explosion);
         CalculateFireDirections();
-        Instantiate(FireMid,transform.position,transform.rotation);
+        GameObject fire = Instantiate(FireMid,transform.position,transform.rotation);
+        BoxCollider2D leftBox = fire.AddComponent<BoxCollider2D>();
+        leftBox.isTrigger = true;
+        float xLSize = 0.9f * (CellsToBlowL.Count + 1);
+        float xLPos = -(0.9f * CellsToBlowL.Count) / 2f;
+        leftBox.size = new Vector2(xLSize, 0.7f);
+        leftBox.offset = new Vector2(xLPos, 0);
         if (CellsToBlowL.Count > 0)
         {
             for (int i = 0; i < CellsToBlowL.Count; i++)
@@ -101,6 +107,12 @@ public class Bomb : MonoBehaviour
                 }
             }
         }
+        BoxCollider2D rigtBox = fire.AddComponent<BoxCollider2D>();
+        rigtBox.isTrigger = true;
+        float xRSize = 0.9f * (CellsToBlowR.Count + 1);
+        float xRPos = (0.9f * CellsToBlowR.Count) / 2f;
+        rigtBox.size = new Vector2(xRSize, 0.7f);
+        rigtBox.offset = new Vector2(xRPos, 0);
         //R
         if (CellsToBlowR.Count > 0)
         {
@@ -116,7 +128,12 @@ public class Bomb : MonoBehaviour
                 }
             }
         }
-
+        BoxCollider2D upBox = fire.AddComponent<BoxCollider2D>();
+        upBox.isTrigger = true;
+        float yUSize = 0.9f * (CellsToBlowU.Count + 1);
+        float yUPos = (0.9f * CellsToBlowU.Count) / 2f;
+        upBox.size = new Vector2(0.7f, yUSize);
+        upBox.offset = new Vector2(0, yUPos);
         //U
         if (CellsToBlowU.Count > 0)
         {
@@ -133,6 +150,12 @@ public class Bomb : MonoBehaviour
             }
         }
 
+        BoxCollider2D downBox = fire.AddComponent<BoxCollider2D>();
+        downBox.isTrigger = true;
+        float yDSize = 0.9f * (CellsToBlowD.Count + 1);
+        float yDPos = -(0.9f * CellsToBlowD.Count) / 2f;
+        downBox.size = new Vector2(0.7f, yDSize);
+        downBox.offset = new Vector2(0, yDPos);
         //D
         if (CellsToBlowD.Count > 0)
         {

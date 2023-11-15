@@ -11,6 +11,7 @@ public class PlayerData
     public bool hasNoClipFire;
     public bool hasNoClipWall;
     public bool hasNoClipBomb;
+    public bool firstDeathAd = true;
     public int lifeCount = 3;
 
     public ELanguages language;

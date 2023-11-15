@@ -16,14 +16,6 @@ MonoBehaviour:
   - monsters:
     - monsterType: 0
       count: 1
-    - monsterType: 1
-      count: 1
-    - monsterType: 2
-      count: 1
-    - monsterType: 3
-      count: 1
-    - monsterType: 4
-      count: 1
     bonuses: 01000000
   - monsters:
     - monsterType: 0
@@ -78,6 +70,64 @@ MonoBehaviour:
       count: 2
     bonuses: 01000000
   - monsters:
-    - monsterType: 1
-      count: 8
+    - monsterType: 4
+      count: 1
+    - monsterType: 3
+      count: 4
     bonuses: 00000000
+  - monsters:
+    - monsterType: 5
+      count: 2
+    bonuses: 05000000
+  - monsters:
+    - monsterType: 5
+      count: 5
+    bonuses: 0200000006000000
+  - monsters:
+    - monsterType: 5
+      count: 3
+    - monsterType: 6
+      count: 1
+    bonuses: 0100000000000000
+  - monsters:
+    - monsterType: 5
+      count: 5
+    - monsterType: 7
+      count: 1
+    bonuses: 03000000
+  - monsters:
+    - monsterType: 7
+      count: 7
+    bonuses: 01000000
+  - monsters:
+    - monsterType: 8
+      count: 3
+    bonuses: 00000000
+  - monsters:
+    - monsterType: 8
+      count: 1
+    - monsterType: 7
+      count: 5
+    - monsterType: 6
+      count: 1
+    bonuses: 05000000
+  - monsters:
+    - monsterType: 5
+      count: 4
+    - monsterType: 6
+      count: 2
+    bonuses: 02000000
+  - monsters:
+    - monsterType: 7
+      count: 6
+    - monsterType: 6
+      count: 2
+    bonuses: 03000000
+  - monsters:
+    - monsterType: 8
+      count: 3
+    - monsterType: 7
+      count: 4
+    - monsterType: 9
+      count: 1
+    bonuses: 040000000500000002000000
