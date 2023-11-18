@@ -75,6 +75,7 @@ public class Bomberman : MonoBehaviour
                 camera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = new Vector3(0, 0, -10);
             }
         }
+        GetBonusSaves();
     }
     private void OnYandexSDKInitialized()
     {
@@ -94,7 +95,6 @@ public class Bomberman : MonoBehaviour
         TextLife.text = Life.ToString();
         SaveExtension.game.startBombLevel = SaveExtension.player.bombLevel;
         SaveExtension.game.startFireLevel = SaveExtension.player.fireLevel;
-        GetBonusSaves();
     }
 
     void Update()
@@ -151,6 +151,7 @@ public class Bomberman : MonoBehaviour
    
     void Die()
     {
+        HapticSystem.Haptic(true, EHapticType.death);
         Life--;
         TextLife.text = Life.ToString();
         SaveExtension.player.lifeCount = Life;
@@ -238,6 +239,14 @@ public class Bomberman : MonoBehaviour
                         guiDetonator.SetActive(true);
                         break;
                     }
+                case (EBonusType)7:
+                    {
+                        SaveExtension.player.lifeCount++;
+                        Life++;
+                        TextLife.text = Life.ToString();
+                        SaveExtension.Save();
+                        break;
+                    }
             }
             Destroy(other.gameObject);
         }
@@ -295,6 +304,7 @@ public class Bomberman : MonoBehaviour
         {
             HasDetonator = true;
             guiDetonator.SetActive(true);
+            _input.ShowDetonatorButton();
         }
         if (SaveExtension.player.hasNoClipFire)
         {
@@ -362,18 +372,29 @@ public class Bomberman : MonoBehaviour
             && handleBomb)
         {
             handleBomb = false;
+            _input.ButtonBomb = false;
             StartCoroutine(TimeToHandleBomb());
+            HapticSystem.Haptic(true, EHapticType.bombPlant);
             Instantiate(Bomb, new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y)), transform.rotation);
+        }
+        else
+        {
+            _input.ButtonBomb = false;
         }
         if (_input.ButtonDetonate && HasDetonator && handleDetonator)
         {
             handleDetonator = false;
+            _input.ButtonDetonate = false;
             StartCoroutine(TimeToHandleDetonator());
             var bombs = FindObjectsOfType<Bomb>();
             foreach(var bomb in bombs)
             {
                 bomb.Blow();
             }
+        }
+        else
+        {
+            _input.ButtonDetonate = false;
         }
     }
     void HandleSensor()

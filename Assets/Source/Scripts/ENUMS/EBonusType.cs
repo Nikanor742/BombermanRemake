@@ -7,5 +7,6 @@ public enum EBonusType
     noclip_wall,
     noclip_fire,
     noclip_bomb,
-    detonator
+    detonator,
+    life
 }

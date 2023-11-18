@@ -5,8 +5,8 @@ interface IInput
     bool ButtonRight { get;}
     bool ButtonUp { get;}
     bool ButtonDown { get;}
-    bool ButtonBomb { get;}
-    bool ButtonDetonate { get;}
+    bool ButtonBomb { get; set; }
+    bool ButtonDetonate { get; set; }
 
     void GetButtonLeft();
     void GetButtonRight();

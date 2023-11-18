@@ -7,8 +7,22 @@ public class MobileInput : MonoBehaviour,IInput
     public bool ButtonRight { get => buttonRight; }
     public bool ButtonUp { get => buttonUp; }
     public bool ButtonDown { get => buttonDown; }
-    public bool ButtonBomb { get => buttonBomb; }
-    public bool ButtonDetonate { get => buttonDetonate; }
+    public bool ButtonBomb
+    {
+        get => buttonBomb;
+        set
+        {
+            buttonBomb = value;
+        }
+    }
+    public bool ButtonDetonate 
+    {
+        get => buttonDetonate;
+        set
+        {
+            buttonDetonate = value;
+        }
+    }
 
     private bool buttonLeft;
     private bool buttonRight;
@@ -23,12 +37,12 @@ public class MobileInput : MonoBehaviour,IInput
 
     public void GetButtonBomb()
     {
-        buttonBomb = UIbuttonBomb.isPressed;
+        buttonBomb = true;
     }
 
     public void GetButtonDetonate()
     {
-        buttonDetonate = UIbuttonDetonate.isPressed;
+        buttonDetonate = true;
     }
 
     public void GetButtonDown()
@@ -62,6 +76,8 @@ public class MobileInput : MonoBehaviour,IInput
     private void Awake()
     {
         _joystick = GetComponentInChildren<Joystick>();
+        UIbuttonBomb.button.onClick.AddListener(GetButtonBomb);
+        UIbuttonDetonate.button.onClick.AddListener(GetButtonDetonate);
     }
     private void Update()
     {
@@ -69,7 +85,11 @@ public class MobileInput : MonoBehaviour,IInput
         GetButtonDown();
         GetButtonLeft();
         GetButtonRight();
-        GetButtonBomb();
-        GetButtonDetonate();
+    }
+
+    private void OnDestroy()
+    {
+        UIbuttonBomb.button.onClick.RemoveAllListeners();
+        UIbuttonDetonate.button.onClick.RemoveAllListeners();
     }
 }

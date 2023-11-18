@@ -1,17 +1,7 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class MobileButton : MonoBehaviour, IPointerDownHandler,IPointerUpHandler
+public class MobileButton : MonoBehaviour
 {
-    [HideInInspector] public bool isPressed;
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        isPressed = true;
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        isPressed = false;
-    }
+    public Button button;
 }

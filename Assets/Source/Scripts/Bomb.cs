@@ -84,6 +84,7 @@ public class Bomb : MonoBehaviour
     }
     public void Blow()
     {
+        HapticSystem.Haptic(true, EHapticType.explosion);
         AudioPlayer.Instance.PlaySound(ESoundType.explosion);
         CalculateFireDirections();
         GameObject fire = Instantiate(FireMid,transform.position,transform.rotation);

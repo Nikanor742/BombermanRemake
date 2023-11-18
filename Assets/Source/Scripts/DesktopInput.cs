@@ -8,8 +8,16 @@ public class DesktopInput : MonoBehaviour,IInput
     public bool ButtonRight { get => buttonRight;}
     public bool ButtonUp { get => buttonUp;}
     public bool ButtonDown { get => buttonDown;}
-    public bool ButtonBomb { get => buttonBomb;}
-    public bool ButtonDetonate { get => buttonDetonate;}
+    public bool ButtonBomb 
+    {
+        get => buttonBomb;
+        set { buttonBomb = value; }
+    }
+    public bool ButtonDetonate 
+    {
+        get => buttonDetonate;
+        set { buttonDetonate = value; } 
+    }
 
     private bool buttonLeft;
     private bool buttonRight;

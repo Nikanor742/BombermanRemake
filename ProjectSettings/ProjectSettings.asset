@@ -782,7 +782,7 @@ PlayerSettings:
   webGLDecompressionFallback: 1
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    WebGL: YG_PLUGIN_YANDEX_GAME;YG_TEXT_MESH_PRO
+    WebGL: YG_PLUGIN_YANDEX_GAME;YG_TEXT_MESH_PRO;MOREMOUNTAINS_NICEVIBRATIONS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
