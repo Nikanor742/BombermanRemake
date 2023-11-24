@@ -19,8 +19,6 @@ public class ENButton : MonoBehaviour
 
     private void OnButtonPressed()
     {
-        SaveExtension.player.language = ELanguages.EN;
-        SaveExtension.Save();
         YandexGame.SwitchLanguage("en");
         SaveExtension.game.ruButton.transform.GetChild(0).gameObject.SetActive(false);
         SaveExtension.game.trButton.transform.GetChild(0).gameObject.SetActive(false);

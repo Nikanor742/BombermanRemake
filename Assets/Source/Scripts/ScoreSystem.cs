@@ -19,21 +19,27 @@ public class ScoreSystem : MonoBehaviour
 
     private void Start()
     {
+        SaveExtension.game.OnYandexSDKInitialized += OnSDKInit;
+        
+    }
+
+    private void OnSDKInit()
+    {
         SetScoreText();
     }
 
     private void SetScoreText()
     {
         string text = "";
-        if(SaveExtension.player.language == ELanguages.RU)
+        if(YandexGame.EnvironmentData.language == "ru")
         {
             text = "счёт: ";
         }
-        else if(SaveExtension.player.language == ELanguages.EN)
+        else if(YandexGame.EnvironmentData.language == "en")
         {
             text = "score: ";
         }
-        else if(SaveExtension.player.language == ELanguages.TR)
+        else if(YandexGame.EnvironmentData.language == "tr")
         {
             text = "kontrol etmek: "; 
         }

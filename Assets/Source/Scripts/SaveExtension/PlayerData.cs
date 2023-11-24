@@ -14,7 +14,6 @@ public class PlayerData
     public bool firstDeathAd = true;
     public int lifeCount = 3;
 
-    public ELanguages language;
     public bool sound = true;
     public bool firstStart = true;
 }

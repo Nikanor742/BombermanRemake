@@ -20,8 +20,6 @@ public class RUButton : MonoBehaviour
 
     private void OnButtonPressed()
     {
-        SaveExtension.player.language = ELanguages.RU;
-        SaveExtension.Save();
         YandexGame.SwitchLanguage("ru");
         SaveExtension.game.enButton.transform.GetChild(0).gameObject.SetActive(false);
         SaveExtension.game.trButton.transform.GetChild(0).gameObject.SetActive(false);

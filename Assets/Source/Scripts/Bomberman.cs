@@ -163,6 +163,7 @@ public class Bomberman : MonoBehaviour
         if (Life <= 0)
         {
             gui.death.SetActive(true);
+            YandexGame.FullscreenShow();
             AudioPlayer.Instance.StopAllSounds();
             AudioPlayer.Instance.PlaySound(ESoundType.dead);
             SaveExtension.player.lifeCount = 3;

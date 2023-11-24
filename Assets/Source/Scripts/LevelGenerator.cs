@@ -28,6 +28,20 @@ public class LevelGenerator : MonoBehaviour
         {
             ControllHelp.Instance.ShowBasicHelp();
         }
+        string text = "";
+        if (YandexGame.EnvironmentData.language == "ru")
+        {
+            text = "уровень ";
+        }
+        else if (YandexGame.EnvironmentData.language == "en")
+        {
+            text = "level ";
+        }
+        else if (YandexGame.EnvironmentData.language == "tr")
+        {
+            text = "seviye ";
+        }
+        levelText.text = text + (level + 1).ToString();
     }
     private void OnYandexSDKInitialized()
     {
@@ -41,20 +55,6 @@ public class LevelGenerator : MonoBehaviour
         SaveExtension.game.OnYandexSDKInitialized += OnYandexSDKInitialized;
 
         int level = SaveExtension.player.level;
-        string text = "";
-        if (SaveExtension.player.language == ELanguages.RU)
-        {
-            text = "уровень ";
-        }
-        else if (SaveExtension.player.language == ELanguages.EN)
-        {
-            text = "level ";
-        }
-        else if (SaveExtension.player.language == ELanguages.TR)
-        {
-            text = "seviye ";
-        }
-        levelText.text = text + (level + 1).ToString();
 
         levelBonuses = new List<EBonusType>();
         levelMonsters = new List<Monster>();

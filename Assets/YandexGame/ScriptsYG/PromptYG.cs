@@ -20,8 +20,8 @@ namespace YG
 
         private void Awake()
         {
-            if (notSupported) notSupported.SetActive(false);
-            if (done) done.SetActive(false);
+            //if (notSupported) notSupported.SetActive(false);
+            //if (done) done.SetActive(false);
             showDialog.SetActive(false);
         }
 
@@ -47,13 +47,13 @@ namespace YG
 #endif
             if (YandexGame.savesData.promptDone)
             {
-                if (notSupported) notSupported.SetActive(false);
-                if (done) done.SetActive(true);
+               /* if (notSupported) notSupported.SetActive(false);
+                if (done) done.SetActive(true);*/
                 showDialog.SetActive(false);
             }
             else if (!YandexGame.EnvironmentData.promptCanShow)
             {
-                if (notSupported) notSupported.SetActive(true);
+                //if (notSupported) notSupported.SetActive(true);
                 if (done) done.SetActive(false);
                 showDialog.SetActive(false);
             }
